@@ -1,0 +1,37 @@
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Archives
+*.zip
+*.tar.gz
+*.rar
+*.cab
+*.gz
+
+# IDE / Editor files
+.vscode/
+.idea/
+*.swp
+*~
+
+# Python (in case you drop any python scripts in this folder)
+__pycache__/
+*.py[cod]
+*$py.class
+venv/
+env/
+
+# Node (in case you add a package.json later)
+node_modules/
+npm-debug.log
+yarn-error.log
+
+# Extension specific
+*.pem
+*.crx

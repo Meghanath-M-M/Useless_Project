@@ -23,12 +23,21 @@ To install this extension locally in your Chrome browser:
 4. Click the **Load unpacked** button in the top left.
 5. Select the folder you just unzipped (the one containing this `README.md` file).
 
-## 🔑 Setup & Usage
+## 🔑 Setup Guide
 
+### 1. Get a Free Gemini API Key
+The AI Curator requires a Gemini API key to write its hilarious backstories for your tabs.
+1. Go to [Google AI Studio](https://aistudio.google.com/app/apikey) and sign in with your Google account.
+2. Click the **"Create API key"** button in the top left.
+3. Copy the generated key.
+
+### 2. Configure the Extension
 1. **Pin the Extension**: Click the puzzle piece icon 🧩 in Chrome's top right toolbar and "pin" the Museum of Tabs icon so it's easily accessible.
-2. **Add your API Key**: Click the museum icon to open it. It will prompt you for a **Gemini API Key** (required for the AI Curator to write the backstories). Paste your key and hit enter.
-3. **Explore**: Scroll horizontally to walk through the rooms. 
-4. **Trigger an Auction**: Close a random tab in your browser, then open the museum and scroll to Room 4 to see it marked as "Sold at Auction"!
+2. **Add your API Key**: Click the museum icon to open it. It will immediately prompt you for your key. Paste the key you copied and hit Enter.
+
+### 3. Usage & Features
+- **Explore**: Scroll horizontally to walk through your open tabs and clipboard fragments.
+- **Trigger an Auction**: Close a random tab in your browser, then open the museum and scroll to the final room to see it marked as "Sold at Auction"!
 
 ---
 *Created for the Hackathon.*
