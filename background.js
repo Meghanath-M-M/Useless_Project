@@ -20,9 +20,13 @@ async function captureActiveTab() {
         console.log("Capture failed", chrome.runtime.lastError);
         return;
       }
-      // Save to local storage keyed by tab ID
+      // Save to local storage keyed by tab ID, including metadata for the auction
       const key = `screenshot_${tab.id}`;
-      chrome.storage.local.set({ [key]: dataUrl });
+      chrome.storage.local.set({ 
+        [key]: dataUrl,
+        [`title_${tab.id}`]: tab.title,
+        [`url_${tab.id}`]: tab.url
+      });
     });
   } catch (err) {
     console.error("Error capturing tab", err);
@@ -43,8 +47,26 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
   }
 });
 
-// Clean up screenshots when tabs are closed
+// Move screenshots to the auction block when tabs are closed
 chrome.tabs.onRemoved.addListener((tabId) => {
   const key = `screenshot_${tabId}`;
-  chrome.storage.local.remove(key);
+  chrome.storage.local.get([key, `title_${tabId}`, `url_${tabId}`, 'auctioned_tabs'], (result) => {
+    if (result[key]) {
+      let auctioned = result.auctioned_tabs || [];
+      auctioned.push({
+        id: tabId,
+        title: result[`title_${tabId}`] || 'Unknown Artifact',
+        url: result[`url_${tabId}`] || '',
+        closedAt: new Date().getTime()
+      });
+      
+      // Keep only the last 4 closed tabs in the auction house to save space
+      if (auctioned.length > 4) {
+        const removed = auctioned.shift();
+        chrome.storage.local.remove([`screenshot_${removed.id}`, `title_${removed.id}`, `url_${removed.id}`]);
+      }
+      
+      chrome.storage.local.set({ auctioned_tabs: auctioned });
+    }
+  });
 });
