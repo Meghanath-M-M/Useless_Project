@@ -1,0 +1,27 @@
+{
+  "manifest_version": 3,
+  "name": "The Museum of Tabs",
+  "version": "1.0",
+  "description": "A curated gallery of your digital clutter.",
+  "permissions": [
+    "tabs",
+    "storage",
+    "clipboardRead",
+    "unlimitedStorage"
+  ],
+  "host_permissions": [
+    "<all_urls>"
+  ],
+  "action": {
+    "default_title": "Enter the Museum"
+  },
+  "background": {
+    "service_worker": "background.js"
+  },
+  "options_page": "options.html",
+  "icons": {
+    "16": "icon.png",
+    "48": "icon.png",
+    "128": "icon.png"
+  }
+}

@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Museum Settings</title>
+  <link rel="stylesheet" href="options.css">
+</head>
+<body>
+  <div class="container">
+    <h1>Museum Settings</h1>
+    <p>The museum uses AI to generate pretentious curator descriptions for your tabs and clipboard.</p>
+    <p>By default, it uses mock descriptions. Enter a Gemini API key to experience the true AI curator.</p>
+    
+    <label for="apiKey">Gemini API Key (Optional):</label>
+    <input type="password" id="apiKey" placeholder="AIzaSy...">
+    
+    <button id="saveBtn">Save Settings</button>
+    <div id="status"></div>
+  </div>
+  <script src="options.js"></script>
+</body>
+</html>

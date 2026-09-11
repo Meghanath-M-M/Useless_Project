@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>The Museum of Tabs</title>
+  <link rel="stylesheet" href="museum.css">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Roboto:wght@300;400&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div id="entrance" class="active">
+    <div class="doors">
+      <h1>The Museum of Digital Clutter</h1>
+      <p>A curated exhibition of your open tabs and copied regrets.</p>
+      <button id="enterBtn">Enter Exhibition</button>
+      <p class="small-text">Note: We require your permission at the door to view your clipboard history.</p>
+    </div>
+  </div>
+
+  <div id="museum" class="hidden">
+    <div class="gallery-container">
+      <!-- Rooms will be injected here -->
+    </div>
+  </div>
+
+  <template id="artwork-template">
+    <div class="artwork-frame">
+      <div class="gold-frame">
+        <div class="matting">
+          <div class="canvas">
+            <div class="art-content"></div>
+          </div>
+        </div>
+      </div>
+      <div class="placard">
+        <h3 class="title"></h3>
+        <p class="medium"></p>
+        <p class="description">
+          <span class="loading-shimmer"></span>
+        </p>
+        <div class="scores">
+          <span class="rarity"></span>
+          <span class="significance"></span>
+        </div>
+      </div>
+    </div>
+  </template>
+
+  <script src="curator.js"></script>
+  <script src="museum.js"></script>
+</body>
+</html>
