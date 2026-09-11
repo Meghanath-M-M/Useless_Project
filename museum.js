@@ -78,6 +78,15 @@ document.addEventListener('DOMContentLoaded', async () => {
         });
         // Reverse to show most recently closed first
         exhibitionRooms[3].exhibits.reverse();
+      } else {
+        // ALWAYS show at least one sold item so the demo works instantly
+        exhibitionRooms[3].exhibits.push({
+          type: 'AuctionedTab',
+          tabId: 'mock',
+          title: 'The Lost Masterpiece',
+          content: 'https://unknown.void',
+          medium: 'Acquired by Private Collector, ' + new Date().toLocaleDateString()
+        });
       }
     } catch (err) {
       console.error('Error fetching auctioned tabs', err);
@@ -91,7 +100,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     let isFirstRoom = true;
 
     for (const room of rooms) {
-      if (room.exhibits.length === 0) continue; // Skip empty rooms (e.g. if clipboard is empty)
+      if (room.exhibits.length === 0) continue; // Skip empty rooms
 
       if (!isFirstRoom) {
         // Inject a pillar between rooms
@@ -113,6 +122,68 @@ document.addEventListener('DOMContentLoaded', async () => {
           galleryContainer.appendChild(currentRoomDiv);
         }
 
+        // SPECIAL LOGIC FOR SOLD ITEMS (No frame, just the hanging sign)
+        if (exhibit.type === 'AuctionedTab') {
+          const soldContainer = document.createElement('div');
+          soldContainer.className = 'artwork-frame'; // Keep for spacing
+          soldContainer.style.alignItems = 'center';
+          soldContainer.style.justifyContent = 'center';
+          
+          // Construct the photorealistic CSS sign
+          const signWrapper = document.createElement('div');
+          signWrapper.className = 'hanging-sold-sign';
+          
+          const nail = document.createElement('div');
+          nail.className = 'nail';
+          
+          const stringLeft = document.createElement('div');
+          stringLeft.className = 'string left';
+          
+          const stringRight = document.createElement('div');
+          stringRight.className = 'string right';
+          
+          const board = document.createElement('div');
+          board.className = 'sign-board';
+          board.textContent = 'SOLD';
+          
+          signWrapper.appendChild(nail);
+          signWrapper.appendChild(stringLeft);
+          signWrapper.appendChild(stringRight);
+          signWrapper.appendChild(board);
+          
+          soldContainer.appendChild(signWrapper);
+          
+          // Clone just the placard to get the AI text
+          const clone = template.content.cloneNode(true);
+          const placard = clone.querySelector('.placard');
+          
+          const title = placard.querySelector('.title');
+          const medium = placard.querySelector('.medium');
+          const description = placard.querySelector('.description');
+          const rarity = placard.querySelector('.rarity');
+          const significance = placard.querySelector('.significance');
+          
+          title.textContent = "Exhibit: " + exhibit.title;
+          medium.textContent = exhibit.medium;
+          
+          soldContainer.appendChild(placard);
+          currentRoomDiv.appendChild(soldContainer);
+          
+          curator.getCuratorialAnalysis(exhibit.type, exhibit.content, exhibit.title).then(analysisObj => {
+            description.style.opacity = '0';
+            description.innerHTML = analysisObj.description;
+            rarity.textContent = analysisObj.rarity;
+            significance.textContent = analysisObj.significance;
+            setTimeout(() => {
+              description.style.transition = 'opacity 1s';
+              description.style.opacity = '1';
+            }, 50);
+          });
+          
+          return; // Skip the rest of the loop for this exhibit
+        }
+
+        // NORMAL LOGIC FOR TABS, WELCOME, CLIPBOARD (Uses Gold Frame)
         const clone = template.content.cloneNode(true);
         const artContent = clone.querySelector('.art-content');
         const title = clone.querySelector('.title');
@@ -122,10 +193,10 @@ document.addEventListener('DOMContentLoaded', async () => {
         const significance = clone.querySelector('.significance');
 
         // Populate basic info
-        title.textContent = exhibit.type === 'Tab' || exhibit.type === 'AuctionedTab' ? "Exhibit: " + (exhibit.title.substring(0, 35) + (exhibit.title.length > 35 ? '...' : '')) : exhibit.title;
+        title.textContent = exhibit.type === 'Tab' ? "Exhibit: " + (exhibit.title.substring(0, 35) + (exhibit.title.length > 35 ? '...' : '')) : exhibit.title;
         medium.textContent = exhibit.medium;
 
-        if (exhibit.type === 'Tab' || exhibit.type === 'AuctionedTab') {
+        if (exhibit.type === 'Tab') {
           const key = `screenshot_${exhibit.tabId}`;
           chrome.storage.local.get([key], (result) => {
             artContent.innerHTML = '';
@@ -136,32 +207,6 @@ document.addEventListener('DOMContentLoaded', async () => {
             }
             artContent.style.backgroundSize = 'cover';
             artContent.style.backgroundPosition = 'center';
-            
-            // Add SOLD sticker for auctioned tabs
-            if (exhibit.type === 'AuctionedTab') {
-              artContent.style.filter = 'grayscale(0.8) contrast(1.2)';
-              
-              const soldSticker = document.createElement('div');
-              soldSticker.textContent = 'SOLD AT AUCTION';
-              soldSticker.style.position = 'absolute';
-              soldSticker.style.top = '50%';
-              soldSticker.style.left = '50%';
-              soldSticker.style.transform = 'translate(-50%, -50%) rotate(-15deg)';
-              soldSticker.style.backgroundColor = '#8a0303';
-              soldSticker.style.color = '#fff';
-              soldSticker.style.padding = '10px 20px';
-              soldSticker.style.fontFamily = "'Playfair Display', serif";
-              soldSticker.style.fontSize = '24px';
-              soldSticker.style.fontWeight = 'bold';
-              soldSticker.style.border = '3px solid #fff';
-              soldSticker.style.boxShadow = '0 5px 15px rgba(0,0,0,0.8)';
-              soldSticker.style.whiteSpace = 'nowrap';
-              soldSticker.style.zIndex = '10';
-              
-              const canvas = artContent.parentElement;
-              canvas.style.position = 'relative'; // Ensure absolute child positions relative to it
-              canvas.appendChild(soldSticker);
-            }
           });
         } else if (exhibit.type === 'Welcome') {
           artContent.innerHTML = '';

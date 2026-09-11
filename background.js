@@ -46,6 +46,8 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
     scheduleCapture();
   }
 });
+chrome.runtime.onInstalled.addListener(scheduleCapture);
+chrome.runtime.onStartup.addListener(scheduleCapture);
 
 // Move screenshots to the auction block when tabs are closed
 chrome.tabs.onRemoved.addListener((tabId) => {
